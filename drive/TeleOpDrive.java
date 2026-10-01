@@ -55,11 +55,6 @@ public class TeleOpDrive extends LinearOpMode {
     private DcMotor backRight;
     private DcMotor frontLeft;
     private DcMotor frontRight;
-
-    private DcMotor flywheel;
-    private DcMotor funnel;
-    private DcMotor cycler1;
-    private DcMotor cycler2;
     
     private IMU imu;
 
@@ -99,16 +94,9 @@ public class TeleOpDrive extends LinearOpMode {
         frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
 
-        flywheel = hardwareMap.get(DcMotor.class, "flywheel");
-        funnel = hardwareMap.get(DcMotor.class, "funnel");
-        cycler1 = hardwareMap.get(DcMotor.class, "cycler1");
-        cycler2 = hardwareMap.get(DcMotor.class, "cycler2");
 
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        flywheel.setDirection(DcMotorSimple.Direction.REVERSE);
-        cycler1.setDirection(DcMotorSimple.Direction.REVERSE);
-        cycler2.setDirection(DcMotorSimple.Direction.REVERSE);
         
 
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
