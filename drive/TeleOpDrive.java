@@ -78,14 +78,6 @@ public class TeleOpDrive extends LinearOpMode {
         backRight.setPower(br / max);
     }
 
-    public void cycleBall(double power) {
-        cycler1.setPower(power);
-        cycler2.setPower(power);
-    }
-    
-    public void spinFlywheel(double power) {
-        flywheel.setPower(power);
-    }
 
     @Override
     public void runOpMode() {
