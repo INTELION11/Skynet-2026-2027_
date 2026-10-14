@@ -51,147 +51,64 @@ import java.lang.Math;
 
 @TeleOp
 public class TeleOpDrive extends LinearOpMode {
-    private DcMotor backLeft;
-    private DcMotor backRight;
-    private DcMotor frontLeft;
-    private DcMotor frontRight;
-    
-    private IMU imu;
+    DcMotor frontLeft, frontRight, backLeft, backRight;
+// the class that does the computations for driving. left joy stick moves, right joy stick rotates
+    public void driveInDirection(double x, double y, double rx){
 
-    public void driveInDirection(double direction, double power, double right_stick) {
-        double x = power * Math.sin(direction); //This two are the problem 
-        double y = power * Math.cos(direction); //^|
+        double fl = y + x + rx;
+        double fr = y - x - rx;
+        double bl = y - x + rx;
+        double br = y + x - rx;
+
+        // Normalize so no value exceeds 1
+        double max = Math.max(Math.abs(fl), Math.max(Math.abs(fr),
+                    Math.max(Math.abs(bl), Math.abs(br))));
+        if (max > 1.0) {
+            fl /= max;
+            fr /= max;
+            bl /= max;
+            br /= max;
+        }
+
+
+        frontLeft.setPower(fl);
+        frontRight.setPower(fr);
+        backLeft.setPower(bl);
+        backRight.setPower(br);
         
-        double fl = y + x - right_stick; //This two are also a problem
-        double fr = y - x + right_stick; //^|
-        double bl = y - x - right_stick;
-        double br = y + x + right_stick;
-
-        double max = Math.max(1.0,
-            Math.max(Math.abs(fl),
-            Math.max(Math.abs(fr),
-            Math.max(Math.abs(bl), Math.abs(br)))));
-
-        frontLeft.setPower(fl / max);
-        frontRight.setPower(fr / max);
-        backLeft.setPower(bl / max);
-        backRight.setPower(br / max);
-    }
-
-    public void cycleBall(double power) {
-        cycler1.setPower(power);
-        cycler2.setPower(power);
-    }
-    
-    public void spinFlywheel(double power) {
-        flywheel.setPower(power);
+        
     }
 
     @Override
-    public void runOpMode() {
+    public void runOpMode() { // when initialized button is pressed
+        frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
+        frontRight = hardwareMap.get(DcMotor.class, "frontRight");// connecting hardware with variables
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
-        frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
-        frontRight = hardwareMap.get(DcMotor.class, "frontRight");
 
-
-        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        
+        frontLeft.setDirection(DcMotor.Direction.REVERSE);// correcting motors that are spinning wrong direction
+        backLeft.setDirection(DcMotor.Direction.REVERSE);
 
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);// if motors are zero, then stop moving
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        imu = hardwareMap.get(IMU.class, "imu");
-        IMU.Parameters params;
-
-        params = new IMU.Parameters(
-             new RevHubOrientationOnRobot(
-                  RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                  RevHubOrientationOnRobot.UsbFacingDirection.FORWARD
-             )
-        );
-        
-        imu.initialize(params);
-        
-        YawPitchRollAngles robotOrientation;
-        double Yaw;
-        double relativeDirection;
-        
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
-        // Wait for the game to start (driver presses PLAY)
-        waitForStart();
-
-        funnel.setPower(1);
-
-        double direction;
-        double power;
-
-        boolean lastStart = false;
-
-        telemetry.addData("Status", "Running");
-        // run until the end of the match (driver presses STOP)
-        
+        waitForStart();// when button start is pressed
+// actual loop
         while (opModeIsActive()) {
-            robotOrientation = imu.getRobotYawPitchRollAngles();
+            double yl1 = Math.abs(gamepad1.left_stick_y) > 0.05 ? -gamepad1.left_stick_y : 0; // forward/back
+            double xl1 = Math.abs(gamepad1.left_stick_x) > 0.05 ? gamepad1.left_stick_x : 0; // strafe. Correcting if unput is too small it beocmes zero
+            double xr1 = Math.abs(gamepad1.right_stick_x) > 0.05 ? gamepad1.right_stick_x : 0; // rotation
 
-            double turn = Math.abs(gamepad1.right_stick_x) > 0.05
-                ? gamepad1.right_stick_x * 0.6
-                : 0;
+            driveInDirection(xl1, yl1, xr1);
+
+            telemetry.addData("Joystick X", xl1);
+            telemetry.addData("Joystick Y", yl1);
+            telemetry.addData("Joystick Rotation", xr1); // Add telemtry data to game control pad thingy
+
+            telemetry.addData("Front Left Power", frontLeft.getPower());
             
-            double xl1 = -gamepad1.left_stick_x;
-            double yl1 = gamepad1.left_stick_y;
-            
-            if (Math.hypot(xl1, yl1) < 0.05) {
-                driveInDirection(0, 0, turn);
-            } else {
-                direction = Math.atan2(yl1, xl1); //this is another one
-                Yaw = robotOrientation.getYaw(AngleUnit.RADIANS);
-                relativeDirection = direction - Yaw;
-
-                if (relativeDirection < -Math.PI) {
-                    relativeDirection += 2*Math.PI;
-                } else if (relativeDirection > Math.PI) {
-                    relativeDirection -= 2*Math.PI;
-                }
-                    
-                if(this.gamepad1.left_trigger > 0.3) {
-                    power = Math.min(1.0, Math.hypot(xl1,yl1) * 1.5); // this is if we need to go fast
-                } else {
-                    power = Math.min(1.0, Math.hypot(xl1,yl1) * 0.5); // this is without the button, so it moves a little slower for precision
-                }
-                
-                telemetry.addData("Joystick Direction", String.valueOf(direction));
-                telemetry.addData("Yaw", String.valueOf(Yaw));
-                telemetry.addData("Relative Direction", String.valueOf(relativeDirection));
-                telemetry.addData("Drive Power", String.valueOf(power));
-                
-                driveInDirection(relativeDirection, power, turn);
-            }
-
-            double yl2 = gamepad2.left_stick_y;
-            double yr2 = gamepad2.right_stick_y;
-
-            if (Math.abs(yr2) > 0.05) {
-                cycleBall(yr2);
-            } else {
-                cycleBall(0);
-            }
-
-            if (Math.abs(yl2) > 0.05) {
-                spinFlywheel(yl2);
-            } else {
-                spinFlywheel(0);
-            }            
-
-            if (gamepad1.start && !lastStart) {
-                imu.resetYaw();
-            }
-            lastStart = gamepad1.start;
-
             telemetry.update();
         }
     }

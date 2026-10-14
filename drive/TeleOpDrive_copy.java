@@ -24,6 +24,7 @@ public class TeleOpDrive_copy extends LinearOpMode {
     private DcMotor backRight;
     private DcMotor frontLeft;
     private DcMotor frontRight;
+    private DcMotor intake;
 
     private DcMotor flywheel;
     private DcMotor funnel;
