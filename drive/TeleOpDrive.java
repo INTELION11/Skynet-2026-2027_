@@ -59,11 +59,11 @@ public class TeleOpDrive extends LinearOpMode {
     private IMU imu;
 
     public void driveInDirection(double direction, double power, double right_stick) {
-        double x = power * Math.sin(direction);
-        double y = power * Math.cos(direction);
+        double x = power * Math.sin(direction); //This two are the problem 
+        double y = power * Math.cos(direction); //^|
         
-        double fl = y + x - right_stick;
-        double fr = y - x + right_stick;
+        double fl = y + x - right_stick; //This two are also a problem
+        double fr = y - x + right_stick; //^|
         double bl = y - x - right_stick;
         double br = y + x + right_stick;
 
@@ -148,7 +148,7 @@ public class TeleOpDrive extends LinearOpMode {
             if (Math.hypot(xl1, yl1) < 0.05) {
                 driveInDirection(0, 0, turn);
             } else {
-                direction = Math.atan2(yl1, xl1);
+                direction = Math.atan2(yl1, xl1); //this is another one
                 Yaw = robotOrientation.getYaw(AngleUnit.RADIANS);
                 relativeDirection = direction - Yaw;
 
