@@ -50,15 +50,15 @@ public class BrandSpankinNewTeleOpDrive extends LinearOpMode {
         waitForStart();// when button start is pressed
 // actual loop
         while (opModeIsActive()) {
-            double yl1 = Math.abs(gamepad1.left_stick_y) > 0.05 ? -gamepad1.left_stick_y : 0; // forward/back
-            double xl1 = Math.abs(gamepad1.left_stick_x) > 0.05 ? gamepad1.left_stick_x : 0; // strafe. Correcting if unput is too small it beocmes zero
-            double xr1 = Math.abs(gamepad1.right_stick_x) > 0.05 ? gamepad1.right_stick_x : 0; // rotation
+            double xl1 = Math.abs(gamepad1.left_stick_x) > 0.05 ? -gamepad1.left_stick_x : 0; // forward/back
+            double yl1 = Math.abs(gamepad1.left_stick_y) > 0.05 ? gamepad1.left_stick_y : 0; // strafe. Correcting if unput is too small it beocmes zero
+            double yr1 = Math.abs(gamepad1.right_stick_y) > 0.05 ? gamepad1.right_stick_y : 0; // rotation
 
-            driveInDirection(xl1, yl1, xr1);
+            driveInDirection(xl1, yl1, yr1);
 
-            telemetry.addData("Joystick X", xl1);
             telemetry.addData("Joystick Y", yl1);
-            telemetry.addData("Joystick Rotation", xr1); // Add telemtry data to game control pad thingy
+            telemetry.addData("Joystick X", xl1);
+            telemetry.addData("Joystick Rotation", yr1); // Add telemtry data to game control pad thingy
 
             telemetry.addData("Front Left Power", frontLeft.getPower());
             
