@@ -69,6 +69,13 @@ public class BrandSpankinNewTeleOpDrive extends LinearOpMode {
                 intakeMotor.setPower(0.0); //Stops the motor if neither trigger is held
             }
             //-----------------------------
+            //---- ARM CONTROL LOGIC---
+            double launch = gamepad1.bottom_right_trigger;
+            double setSpeed = gamepad1.bottom_left_trigger;
+
+            /* if (setSpeed > 3.0s) {
+                launchMotor.setpower(launchMotor);
+            } else if (setSpeed <= 3.0s)*/
 
             telemetry.addData("Joystick Y", yl1);
             telemetry.addData("Joystick X", xl1);
