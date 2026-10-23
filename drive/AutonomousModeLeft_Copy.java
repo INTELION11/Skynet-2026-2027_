@@ -83,10 +83,10 @@ public class AutonomousModeLeft_Copy extends LinearOpMode {
        
         double timer;
        
-        double forward = Math.PI/2;
-        double right = Math.PI;
-        double left = 0;
-        double backward = Math.PI/-2;
+        double forward = 0;
+        double right = Math.PI/2; 
+        double left = Math.PI/-2; 
+        double backward = Math.PI;
        
         double delayedRun = runtime.seconds();
        
