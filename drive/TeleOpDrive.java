@@ -30,9 +30,9 @@ public class TeleOpDrive extends LinearOpMode {
     public void driveInDirection(double x, double y, double rx){
 
         double fl = y + x + rx;
-        double fr = y - x - rx;
+        double fr = y - x + rx;
         double bl = y - x - rx;
-        double br = y + x + rx;
+        double br = y + x - rx;
 
         // Normalize so no value exceeds 1
         double max = Math.max(Math.abs(fl), Math.max(Math.abs(fr),
@@ -72,23 +72,25 @@ public class TeleOpDrive extends LinearOpMode {
         waitForStart();// when button start is pressed
 
         while (opModeIsActive()) {
-            double yl1 = Math.abs(gamepad1.left_stick_y) > 0.05 ? -gamepad1.left_stick_y : 0; // Forward/Backward
-            double xl1 = Math.abs(gamepad1.left_stick_x) > 0.05 ? gamepad1.left_stick_x : 0;  // Strafe Left/Right
-            double yr1 = Math.abs(gamepad1.right_stick_x) > 0.05 ? gamepad1.right_stick_x : 0;
+            double yl1 = Math.abs(gamepad1.left_stick_x) > 0.05 ? gamepad1.left_stick_x : 0; // Forward/Backward
+            double xl1 = Math.abs(gamepad1.left_stick_y) > 0.05 ? gamepad1.left_stick_y : 0;  // Strafe Left/Right
+            double yr1 = Math.abs(gamepad1.right_stick_y) > 0.05 ? gamepad1.right_stick_y : 0;
 
-            driveInDirection(xl1, yl1, yr1);
+            driveInDirection(-xl1, yl1, yr1);
             //--- INTAKE CONTROL LOGIC ---
             double intakePower = gamepad1.right_trigger;
             double outtakePower = gamepad1.left_trigger;
 
-            if (intakePower > 0.1) {
-                intakeMotor.setPower(intakePower); //makes the motor suck items
-            } else if (outtakePower > 0.1) {
-                intakeMotor.setPower(-outtakePower); //Makes the motor spit items
+
+            if (gamepad1.right_trigger_pressed) {
+                intakeMotor.setPower(1); //makes the motor suck items
+            } else if (gamepad1.left_trigger_pressed) {
+                intakeMotor.setPower(-1); //Makes the motor spit items
             } else {
                 intakeMotor.setPower(0.0); //Stops the motor if neither trigger is held
             }
             //-----------------------------
+
 
            telemetry.addData("Joystick Y (Forward)", yl1);
             telemetry.addData("Joystick X (Strafe)", xl1);
@@ -100,3 +102,4 @@ public class TeleOpDrive extends LinearOpMode {
         }
     }
 }
+
