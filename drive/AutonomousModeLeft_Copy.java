@@ -28,6 +28,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp
 
+// 48 inches per sec
 
 public class AutonomousModeLeft_Copy extends LinearOpMode {
     private Blinker control_Hub;
@@ -65,20 +66,34 @@ public class AutonomousModeLeft_Copy extends LinearOpMode {
         backLeft.setPower(bl / max);
         backRight.setPower(br / max);
     }
-   
-    public void runOpMode() {
+    
+    
+        public void runOpMode() {
+
         control_Hub = hardwareMap.get(Blinker.class, "Control Hub");
         expansion_Hub_2 = hardwareMap.get(Blinker.class, "Expansion Hub 2");
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
         frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
-        servoRight = hardwareMap.get(Servo.class, "servoRight");
+
+        flywheel = hardwareMap.get(DcMotor.class, "flywheel");
+        funnel = hardwareMap.get(DcMotor.class, "funnel");
+        cycler1 = hardwareMap.get(DcMotor.class, "cycler1");
+        cycler2 = hardwareMap.get(DcMotor.class, "cycler2");
+
         servoLeft = hardwareMap.get(Servo.class, "servoLeft");
-        //leftShoulder = hardwareMap.get(DcMotor.class, "left shoulder");
-        //rightShoulder = hardwareMap.get(DcMotor.class, "right shoulder");
-        //elbow = hardwareMap.get(DcMotor.class, "elbow");
-       
+        servoRight = hardwareMap.get(Servo.class, "servoRight");
+
+        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        flywheel.setDirection(DcMotorSimple.Direction.REVERSE);
+        cycler1.setDirection(DcMotorSimple.Direction.REVERSE);
+        cycler2.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         waitForStart();
        
         double timer;
@@ -101,19 +116,103 @@ public class AutonomousModeLeft_Copy extends LinearOpMode {
             double timeInSeconds = runtime.seconds() - delayedRun;
            
             if(timeInSeconds <= 0.5) {
-                driveInDirection(forward, 0.2, 0);
+                driveInDirection(forward, 1, 0);
                 telemetry.addData("Phase", 1);
-            } else if (timeInSeconds <= 2) {
-                driveInDirection(left, 0.6, 0);
+            }
+
+            else if(timeInSeconds <= 1) {
+                driveInDirection(right, 1, 0);
                 telemetry.addData("Phase", 2);
-            } else if (timeInSeconds <= 3) {
-                driveInDirection(backward, 0.2, 0);
+            }
+            else if(timeInSeconds <= 1.5) {
+                driveInDirection(forward, 1, 0);
                 telemetry.addData("Phase", 3);
-            } else {
-                driveInDirection(0, 0, 0);
+            }
+            else if(timeInSeconds <= 2) {
+                driveInDirection(forward, 1, 0);
                 telemetry.addData("Phase", 4);
             }
-           
+            else if(timeInSeconds <= 2.5) {
+                driveInDirection(forward, 1, 0);
+                telemetry.addData("Phase", 5);
+            }
+            else if(timeInSeconds <= 3) {
+                driveInDirection(left, 1, 0);
+                telemetry.addData("Phase", 6);
+            }
+            else if(timeInSeconds <= 3.5) {
+                driveInDirection(forward, 1, 0);
+                telemetry.addData("Phase", 7);
+            }
+            else if(timeInSeconds <= 4) {
+                driveInDirection(left, 1, 0);
+                telemetry.addData("Phase", 8);
+            }
+            else if(timeInSeconds <= 4.8) {
+                driveInDirection(0, 0, 0);
+                telemetry.addData("Phase", 9);
+                flywheel.setPower(1);
+            }
+            else if (timeInSeconds <= 7) {
+                cycler1.setPower(1);
+                cycler2.setPower(1);
+                telemetry.addData("Phase", 10);
+            }
+            else if (timeInSeconds <= 11) {
+                flywheel.setPower(0);
+                cycler1.setPower(0);
+                cycler2.setPower(0);
+                driveInDirection(0, 0, 1);
+                telemetry.addData("Phase", 11);
+            }
+            else if(timeInSeconds <= 11.5) {
+                driveInDirection(right, 1, 0);
+                telemetry.addData("Phase",12);
+            }
+            else if(timeInSeconds <= 12) {
+                driveInDirection(forward, 1, 0);
+                telemetry.addData("Phase", 13);
+            }
+            else if(timeInSeconds <= 12.5) {
+                driveInDirection(forward, 1, 0);
+                telemetry.addData("Phase", 14);
+            }
+            else if(timeInSeconds <= 13) {
+                driveInDirection(left, 1, 0);
+                telemetry.addData("Phase", 15);
+            }
+            else if(timeInSeconds <= 13.5) {
+                driveInDirection(forward, 1, 0);
+                telemetry.addData("Phase", 16);
+            }
+            else if(timeInSeconds <= 14) {
+                driveInDirection(forward, 1, 0);
+                telemetry.addData("Phase", 17);
+            }
+            else if(timeInSeconds <= 14.5) {
+                driveInDirection(forward, 1, 0);
+                telemetry.addData("Phase", 18);
+            }
+            else if(timeInSeconds <= 15) {
+                driveInDirection(left, 1, 0);
+                telemetry.addData("Phase", 19);
+            }
+            else if(timeInSeconds <= 15.5) {
+                driveInDirection(forward, 1, 0);
+                telemetry.addData("Phase", 20);
+            }
+            else if(timeInSeconds <= 16) {
+                driveInDirection(forward, 1, 0);
+                telemetry.addData("Phase", 21);
+            }
+            else if(timeInSeconds <= 16.5) {
+                driveInDirection(forward, 1, 0);
+                telemetry.addData("Phase", 22);
+            }
+            else if(timeInSeconds <= 17) {
+                driveInDirection(forward, 1, 0);
+                telemetry.addData("Phase", 23);
+            }
             telemetry.addData("Time", runtime.seconds());
            
             telemetry.update();
