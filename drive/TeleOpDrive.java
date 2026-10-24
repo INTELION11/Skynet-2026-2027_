@@ -31,8 +31,8 @@ public class TeleOpDrive extends LinearOpMode {
 
         double fl = y + x + rx;
         double fr = y - x - rx;
-        double bl = y - x + rx;
-        double br = y + x - rx;
+        double bl = y - x - rx;
+        double br = y + x + rx;
 
         // Normalize so no value exceeds 1
         double max = Math.max(Math.abs(fl), Math.max(Math.abs(fr),
@@ -72,9 +72,9 @@ public class TeleOpDrive extends LinearOpMode {
         waitForStart();// when button start is pressed
 
         while (opModeIsActive()) {
-            double xl1 = Math.abs(gamepad1.left_stick_x) > 0.05 ? -gamepad1.left_stick_x : 0; // forward/back
-            double yl1 = Math.abs(gamepad1.left_stick_y) > 0.05 ? gamepad1.left_stick_y : 0; // strafe. Correcting if unput is too small it beocmes zero
-            double yr1 = Math.abs(gamepad1.right_stick_y) > 0.05 ? gamepad1.right_stick_y : 0; // rotation
+            double yl1 = Math.abs(gamepad1.left_stick_y) > 0.05 ? -gamepad1.left_stick_y : 0; // Forward/Backward
+            double xl1 = Math.abs(gamepad1.left_stick_x) > 0.05 ? gamepad1.left_stick_x : 0;  // Strafe Left/Right
+            double yr1 = Math.abs(gamepad1.right_stick_x) > 0.05 ? gamepad1.right_stick_x : 0;
 
             driveInDirection(xl1, yl1, yr1);
             //--- INTAKE CONTROL LOGIC ---
@@ -90,9 +90,9 @@ public class TeleOpDrive extends LinearOpMode {
             }
             //-----------------------------
 
-            telemetry.addData("Joystick Y", yl1);
-            telemetry.addData("Joystick X", xl1);
-            telemetry.addData("Joystick Rotation", yr1); // Add telemtry data to game control pad thingy
+           telemetry.addData("Joystick Y (Forward)", yl1);
+            telemetry.addData("Joystick X (Strafe)", xl1);
+            telemetry.addData("Joystick RX (Rotate)", yr1);
 
             telemetry.addData("Front Left Power", frontLeft.getPower());
             
