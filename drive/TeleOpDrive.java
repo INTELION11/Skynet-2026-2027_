@@ -25,7 +25,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 @TeleOp(name="TeleOp Drive", group= "Linear OpMode")
 public class TeleOpDrive extends LinearOpMode {
 //Drive motors
-    DcMotor frontLeft, frontRight, backLeft, backRight, intakeMotor;
+    DcMotor frontLeft, frontRight, backLeft, backRight, intakeMotor;// add flywheelMotor
 // the class that does the computations for driving. left joy stick moves, right joy stick rotates
     public void driveInDirection(double x, double y, double rx){
 
@@ -90,12 +90,19 @@ public class TeleOpDrive extends LinearOpMode {
                 intakeMotor.setPower(0.0); //Stops the motor if neither trigger is held
             }
             //-----------------------------
-
-
+            //Second Game Pad with flywheel on left_trigger
+            //double flywheel_Power = gamepad2.left_trigger;
+            //if (flywheel_Power > 0.1) {
+            //    flywheelMotor.setPower(flywheel_Power); // make sthe fly wheel run
+            //} else {
+             //   flywheelMotor.setPower(0.0); //Stops the motor if neither trigger is held
+            //}
            telemetry.addData("Joystick Y (Forward)", yl1);
             telemetry.addData("Joystick X (Strafe)", xl1);
             telemetry.addData("Joystick RX (Rotate)", yr1);
-
+            telemetry.addData("Intake",intakePower );
+            telemetry.addData("outtake", outtakePower );
+            //telemetry.addData("flyWheel",flywheel_Power );
             telemetry.addData("Front Left Power", frontLeft.getPower());
             
             telemetry.update();
