@@ -78,8 +78,8 @@ public class TeleOpDrive extends LinearOpMode {
 
             driveInDirection(xl1, yl1, yr1);
             //--- INTAKE CONTROL LOGIC ---
-            double intakePower = gamepad1.right_trigger * 2;
-            double outtakePower = gamepad1.left_trigger * 2;
+            double intakePower = gamepad1.right_trigger;
+            double outtakePower = gamepad1.left_trigger;
 
             if (intakePower > 0.1) {
                 intakeMotor.setPower(intakePower); //makes the motor suck items
