@@ -127,8 +127,14 @@ public class TeleOpDrive extends LinearOpMode {
                 driveInDirection(-xl1 / 2.0, yl1 / 2.0, yr1 / 2.0); 
             } else if (gamepad1.b) {
                 driveInDirection(-xl1, yl1, yr1);
+                // if (gamepad1.justPressed(com.qualcomm.robotcore.hardware.Gamepad.Button.B)) {
+                //    gamepad1.rumble(150);
+                //}
             } else if (gamepad1.a) {
                 driveInDirection(-xl1/4.0 , yl1/4.0, yr1/4.0);
+                //if (gamepad1.justPressed(com.qualcomm.robotcore.hardware.Gamepad.Button.A)) {
+                //    gamepad1.rumble(400);
+                //}
             } else {
                 driveInDirection(-xl1 / 2.0, yl1 / 2.0, yr1 / 2.0);
             }
@@ -144,6 +150,8 @@ public class TeleOpDrive extends LinearOpMode {
                 intakeMotor.setPower(1); //makes the motor suck items
             } else if (gamepad1.left_trigger_pressed) {
                 intakeMotor.setPower(-1); //Makes the motor spit items
+            } else if (gamepad1.left_stick_button) {
+                intakeMotor.setPower(1); //Makes the motor suck items
             } else {
                 intakeMotor.setPower(0.0); //Stops the motor if neither trigger is held
             }
