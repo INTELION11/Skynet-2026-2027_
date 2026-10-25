@@ -1,5 +1,6 @@
 /*
-Copyright 2024 FIRST Tech Challenge Team 21881
+Copyright 2024, 2026 FIRST Tech Challenge Team 21881 and Contributors
+BioBuzz Season (2026-2027)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -17,16 +18,35 @@ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+
+
+//--- IMPORTING HARDWARE --- -------------------------------------------------------------------------
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode; //REMOVE THE 23!!!
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+
+
+
+//========================================================================================================
+//        vvvvvvvvvvvvvvvvvvvvvvvvvvv SETUP vvvvvvvvvvvvvvvvvvvvvvvvvvv
+//========================================================================================================
+
+
+
 @TeleOp(name="TeleOp Drive", group= "Linear OpMode")
 public class TeleOpDrive extends LinearOpMode {
-//Drive motors
+
+
+//--- DRIVING MOTORS --- -------------------------------------------------------------------------
+
     DcMotor frontLeft, frontRight, backLeft, backRight, intakeMotor;// add flywheelMotor
-// the class that does the computations for driving. left joy stick moves, right joy stick rotates
+
+
+//--- DRIVING MATH FUNCTION --- -------------------------------------------------------------------------
+
     public void driveInDirection(double x, double y, double rx){
 
         double fl = y + x + rx;
@@ -53,6 +73,15 @@ public class TeleOpDrive extends LinearOpMode {
         
     }
 
+
+
+
+//========================================================================================================
+//        vvvvvvvvvvvvvvvvvvvvvvvvvvv INITIALIZE vvvvvvvvvvvvvvvvvvvvvvvvvvv
+//========================================================================================================
+
+
+
     @Override
     public void runOpMode() { // when initialized button is pressed
         frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
@@ -60,6 +89,10 @@ public class TeleOpDrive extends LinearOpMode {
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
+        //flywheelMotor = hardwareMap.get(DcMotor.class, "flywheelMotor");
+
+
+//--- CORRECTING MOTORS AND DRIVING STOP --- -------------------------------------------------------------------------
 
         frontLeft.setDirection(DcMotor.Direction.REVERSE);// correcting motors that are spinning wrong direction
         backLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -69,15 +102,40 @@ public class TeleOpDrive extends LinearOpMode {
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);// if motors are zero, then stop moving
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+
+
         waitForStart();// when button start is pressed
+
+
+
+
+//========================================================================================================
+//        vvvvvvvvvvvvvvvvvvvvvvvvvvv MAIN LOOP vvvvvvvvvvvvvvvvvvvvvvvvvvv
+//========================================================================================================
+
+
 
         while (opModeIsActive()) {
             double yl1 = Math.abs(gamepad1.left_stick_x) > 0.05 ? gamepad1.left_stick_x : 0; // Forward/Backward
             double xl1 = Math.abs(gamepad1.left_stick_y) > 0.05 ? gamepad1.left_stick_y : 0;  // Strafe Left/Right
             double yr1 = Math.abs(gamepad1.right_stick_y) > 0.05 ? gamepad1.right_stick_y : 0;
 
-            driveInDirection(-xl1, yl1, yr1);
-            //--- INTAKE CONTROL LOGIC ---
+
+//--- TURBO AND TURTLE LOGIC --- -------------------------------------------------------------------------
+
+            if (gamepad1.b && gamepad1.a) {
+                driveInDirection(-xl1 / 2.0, yl1 / 2.0, yr1 / 2.0); 
+            } else if (gamepad1.b) {
+                driveInDirection(-xl1, yl1, yr1);
+            } else if (gamepad1.a) {
+                driveInDirection(-xl1/4.0 , yl1/4.0, yr1/4.0);
+            } else {
+                driveInDirection(-xl1 / 2.0, yl1 / 2.0, yr1 / 2.0);
+            }
+
+
+//--- INTAKE CONTROL LOGIC --- -------------------------------------------------------------------------
+
             double intakePower = gamepad1.right_trigger;
             double outtakePower = gamepad1.left_trigger;
 
@@ -89,7 +147,10 @@ public class TeleOpDrive extends LinearOpMode {
             } else {
                 intakeMotor.setPower(0.0); //Stops the motor if neither trigger is held
             }
-            //-----------------------------
+
+
+//--- FLY WHEEL LOGIC --- -------------------------------------------------------------------------
+
             //Second Game Pad with flywheel on left_trigger
             //double flywheel_Power = gamepad2.left_trigger;
             //if (flywheel_Power > 0.1) {
@@ -97,12 +158,18 @@ public class TeleOpDrive extends LinearOpMode {
             //} else {
              //   flywheelMotor.setPower(0.0); //Stops the motor if neither trigger is held
             //}
-           telemetry.addData("Joystick Y (Forward)", yl1);
+
+
+//--- TELEMETRY DATA --- -------------------------------------------------------------------------
+
+            telemetry.addData("Joystick Y (Forward)", yl1);
             telemetry.addData("Joystick X (Strafe)", xl1);
             telemetry.addData("Joystick RX (Rotate)", yr1);
             telemetry.addData("Intake",intakePower );
             telemetry.addData("outtake", outtakePower );
             //telemetry.addData("flyWheel",flywheel_Power );
+            telemetry.addData("turbo",gamepad1.b );
+            telemetry.addData("turtle",gamepad1.a );
             telemetry.addData("Front Left Power", frontLeft.getPower());
             
             telemetry.update();
