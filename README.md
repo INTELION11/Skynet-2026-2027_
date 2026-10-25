@@ -19,10 +19,10 @@ ___
 ### Important Personnel
 + Mrs. Larose: Adult Supervisor
 + Tate: Team Leader
-+ N/A: Programming Lead
++ Jacob: Programming Lead
 
 ### Programmers
-+ Jacob (Leader)
++ Jacob Programming Leader
 + Aaron
 + Daniel
 + James
