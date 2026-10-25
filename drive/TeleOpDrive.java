@@ -77,7 +77,10 @@ public class TeleOpDrive extends LinearOpMode {
             double xl1 = Math.abs(gamepad1.left_stick_y) > 0.05 ? gamepad1.left_stick_y : 0;  // Strafe Left/Right
             double yr1 = Math.abs(gamepad1.right_stick_y) > 0.05 ? gamepad1.right_stick_y : 0;
 
-            if (gamepad1.b) {
+
+              if (gamepad1.b && gamepad1.a) {
+            driveInDirection(-xl1 / 2.0, yl1 / 2.0, yr1 / 2.0); 
+            } else if (gamepad1.b) {
                 
                 driveInDirection(-xl1, yl1, yr1);
             } else if (gamepad1.a) {
