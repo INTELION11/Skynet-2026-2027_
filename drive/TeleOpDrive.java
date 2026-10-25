@@ -60,6 +60,7 @@ public class TeleOpDrive extends LinearOpMode {
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
+        //flywheelMotor = hardwareMap.get(DcMotor.class, "flywheelMotor");
 
         frontLeft.setDirection(DcMotor.Direction.REVERSE);// correcting motors that are spinning wrong direction
         backLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -76,7 +77,15 @@ public class TeleOpDrive extends LinearOpMode {
             double xl1 = Math.abs(gamepad1.left_stick_y) > 0.05 ? gamepad1.left_stick_y : 0;  // Strafe Left/Right
             double yr1 = Math.abs(gamepad1.right_stick_y) > 0.05 ? gamepad1.right_stick_y : 0;
 
-            driveInDirection(-xl1, yl1, yr1);
+            if (gamepad1.b) {
+                
+                driveInDirection(-xl1, yl1, yr1);
+            } else if (gamepad1.a) {
+                driveInDirection(-xl1/4.0 , yl1/4.0, yr1/4.0);
+            } else {
+                
+                driveInDirection(-xl1 / 2.0, yl1 / 2.0, yr1 / 2.0);
+            }
             //--- INTAKE CONTROL LOGIC ---
             double intakePower = gamepad1.right_trigger;
             double outtakePower = gamepad1.left_trigger;
@@ -103,6 +112,8 @@ public class TeleOpDrive extends LinearOpMode {
             telemetry.addData("Intake",intakePower );
             telemetry.addData("outtake", outtakePower );
             //telemetry.addData("flyWheel",flywheel_Power );
+            telemetry.addData("turbo",gamepad1.b );
+            telemetry.addData("turtle",gamepad1.a );
             telemetry.addData("Front Left Power", frontLeft.getPower());
             
             telemetry.update();
