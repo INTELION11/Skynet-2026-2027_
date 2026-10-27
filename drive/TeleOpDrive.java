@@ -40,10 +40,12 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class TeleOpDrive extends LinearOpMode {
 
 
-//--- DRIVING MOTORS --- -------------------------------------------------------------------------
+//--- DRIVING MOTORS + MEMORY --- -------------------------------------------------------------------------
 
     DcMotor frontLeft, frontRight, backLeft, backRight, intakeMotor;// add flywheelMotor
 
+    //boolean lastB = false;
+    //boolean lastA = false;
 
 //--- DRIVING MATH FUNCTION --- -------------------------------------------------------------------------
 
@@ -64,12 +66,29 @@ public class TeleOpDrive extends LinearOpMode {
             br /= max;
         }
 
+//--- TURTLE AND TURBO LOGIC 2.0 --- -------------------------------------------------------------------------
+        double modifier = 0.5;
 
-        frontLeft.setPower(fl);
-        frontRight.setPower(fr);
-        backLeft.setPower(bl);
-        backRight.setPower(br);
-        
+        if (gamepad1.b) {
+            modifier = 1.0; 
+            //if (!lastB) { // If B wasn't pressed on the last frame, rumble
+                //gamepad1.rumble(150);
+            //}   
+        } else if (gamepad1.a) {
+            modifier = 0.25;
+            //if (!lastA) { // If A wasn't pressed on the last frame, rumble 
+                //gamepad1.rumble(150);
+            //}   
+        }
+
+// Update the history before sending power so it remembers for the next loop cycle
+        //lastB = gamepad1.b;
+        //lastA = gamepad1.a;
+
+        frontLeft.setPower(fl * modifier);
+        frontRight.setPower(fr * modifier);
+        backLeft.setPower(bl * modifier);
+        backRight.setPower(br * modifier);
         
     }
 
@@ -123,21 +142,21 @@ public class TeleOpDrive extends LinearOpMode {
 
 //--- TURBO AND TURTLE LOGIC --- -------------------------------------------------------------------------
 
-            if (gamepad1.b && gamepad1.a) {
-                driveInDirection(-xl1 / 2.0, yl1 / 2.0, yr1 / 2.0); 
-            } else if (gamepad1.b) {
+            //if (gamepad1.b && gamepad1.a) {
+                //driveInDirection(-xl1 / 2.0, yl1 / 2.0, yr1 / 2.0); 
+            //} else if (gamepad1.b) {
                 driveInDirection(-xl1, yl1, yr1);
                 // if (gamepad1.justPressed(com.qualcomm.robotcore.hardware.Gamepad.Button.B)) {
                 //    gamepad1.rumble(150);
                 //}
-            } else if (gamepad1.a) {
-                driveInDirection(-xl1/4.0 , yl1/4.0, yr1/4.0);
+            //} else if (gamepad1.a) {
+                //driveInDirection(-xl1/4.0 , yl1/4.0, yr1/4.0);
                 //if (gamepad1.justPressed(com.qualcomm.robotcore.hardware.Gamepad.Button.A)) {
                 //    gamepad1.rumble(400);
                 //}
-            } else {
-                driveInDirection(-xl1 / 2.0, yl1 / 2.0, yr1 / 2.0);
-            }
+            //} else {
+                //driveInDirection(-xl1 / 2.0, yl1 / 2.0, yr1 / 2.0);
+            //}
 
 
 //--- INTAKE CONTROL LOGIC --- -------------------------------------------------------------------------
