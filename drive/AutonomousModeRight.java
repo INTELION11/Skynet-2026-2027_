@@ -123,7 +123,7 @@ public class AutonomousModeRight extends LinearOpMode {
             } else if (timeInSeconds <= 12) {
                 driveInDirection(forward, 1, 0);
                 telemetry.addData("Phase", 6);
-            /*} else if (timeInSeconds <= 12.8) {
+            } else if (timeInSeconds <= 12.8) {
                 driveInDirection(0, 0, 1);
                 telemetry.addData("Phase", 7);
                 flywheel.setPower(1);
@@ -137,7 +137,7 @@ public class AutonomousModeRight extends LinearOpMode {
                 cycler2.setPower(0);
                 driveInDirection(0, 0, -1);
                 telemetry.addData("Phase", 9);
-            } */else if (timeInSeconds <= 19.6) {
+            } else if (timeInSeconds <= 19.6) {
                 driveInDirection(backward, 1, 0);
                 telemetry.addData("Phase", 10);
             } else if (timeInSeconds <= 22.0) {
