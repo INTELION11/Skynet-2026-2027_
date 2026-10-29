@@ -77,18 +77,18 @@ public class AutonomousModeLeft_Copy extends LinearOpMode {
         frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
 
-        flywheel = hardwareMap.get(DcMotor.class, "flywheel");
+        //flywheel = hardwareMap.get(DcMotor.class, "flywheel");
         funnel = hardwareMap.get(DcMotor.class, "funnel");
-        cycler1 = hardwareMap.get(DcMotor.class, "cycler1");
-        cycler2 = hardwareMap.get(DcMotor.class, "cycler2");
+        //cycler1 = hardwareMap.get(DcMotor.class, "cycler1");
+        //cycler2 = hardwareMap.get(DcMotor.class, "cycler2");
 
         servoLeft = hardwareMap.get(Servo.class, "servoLeft");
         servoRight = hardwareMap.get(Servo.class, "servoRight");
 
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        flywheel.setDirection(DcMotorSimple.Direction.REVERSE);
-        cycler1.setDirection(DcMotorSimple.Direction.REVERSE);
-        cycler2.setDirection(DcMotorSimple.Direction.REVERSE);
+        //flywheel.setDirection(DcMotorSimple.Direction.REVERSE);
+        //cycler1.setDirection(DcMotorSimple.Direction.REVERSE);
+        //cycler2.setDirection(DcMotorSimple.Direction.REVERSE);
 
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
