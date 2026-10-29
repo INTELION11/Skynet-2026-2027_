@@ -146,6 +146,7 @@ public class AutonomousModeLeft_Copy extends LinearOpMode {
             else if(timeInSeconds <= 4) {
                 driveInDirection(left, 0, 0);
                 telemetry.addData("Phase", 8);
+            }
         /*
             }
             else if(timeInSeconds <= 4.8) {
@@ -221,14 +222,6 @@ public class AutonomousModeLeft_Copy extends LinearOpMode {
    
     }
    
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
 }
+   
+   
