@@ -128,7 +128,7 @@ public class AutonomousModeRight extends LinearOpMode {
             } else if (timeInSeconds <= 8.71) {
                 driveInDirection(left, 0, 0);
                 telemetry.addData("Phase", 7);
-                flywheel.setPower(1);/*
+                /*flywheel.setPower(1);
             } else if (timeInSeconds <= 14.8) {
                 cycler1.setPower(1);
                 cycler2.setPower(1);
