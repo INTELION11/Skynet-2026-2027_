@@ -2,14 +2,35 @@
 Copyright 2024, 2026 FIRST Tech Challenge Team 21881 and Contributors
 BioBuzz Season (2026-2027)
 
+
+
+
+
+
+
+
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
 including without limitation the rights to use, copy, modify, merge, publish, distribute,
 sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
 
+
+
+
+
+
+
+
 The above copyright notice and this permission notice shall be included in all copies or substantial
 portions of the Software.
+
+
+
+
+
+
+
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
 NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -34,6 +55,14 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 //        vvvvvvvvvvvvvvvvvvvvvvvvvvv SETUP vvvvvvvvvvvvvvvvvvvvvvvvvvv
 //========================================================================================================
 
+@TeleOp(name="TeleOp Drive", group= "Linear OpMode")
+public class TeleOpDrive extends LinearOpMode {
+
+//--- DRIVING MOTORS + MEMORY --- --------------------------------------------------------------------
+    DcMotor frontLeft, frontRight, backLeft, backRight, intakeMotor, flywheelMotor;// add flywheelMotor
+    //boolean lastB = false;
+    //boolean lastA = false;
+//--- DRIVING MATH FUNCTION --- -------------------------------------------------------------------------
 
 
 @TeleOp(name="TeleOp Drive", group= "Linear OpMode")
@@ -57,15 +86,35 @@ public class TeleOpDrive extends LinearOpMode {
         double br = y + x - rx;
 
         // Normalize so no value exceeds 1
-        double max = Math.max(Math.abs(fl), Math.max(Math.abs(fr),
+        /*double max = Math.max(Math.abs(fl), Math.max(Math.abs(fr),
                     Math.max(Math.abs(bl), Math.abs(br))));
         if (max > 1.0) {
             fl /= max;
             fr /= max;
             bl /= max;
             br /= max;
+        }*/
+
+//--- TURTLE AND TURBO LOGIC 2.0 --- -------------------------------------------------------------------------
+        //double modifier = 0.5;
+
+        if (gamepad1.right_bumper) {
+            double modifier = 1.0;
+            //if (!lastB) { // If B wasn't pressed on the last frame, rumble
+                //gamepad1.rumble(150);
+            //}  
+        } else if (gamepad1.left_bumper) {
+            double modifier = 0.25;
+            //if (!lastA) { // If A wasn't pressed on the last frame, rumble
+                //gamepad1.rumble(150);
+            //}  
+        } else {
+            double modifier = 0.5;
         }
 
+// Update the history before sending power so it remembers for the next loop cycle
+        //lastB = gamepad1.b;
+        //lastA = gamepad1.a;
 //--- TURTLE AND TURBO LOGIC 2.0 --- -------------------------------------------------------------------------
         double modifier = 0.5;
 
@@ -89,6 +138,12 @@ public class TeleOpDrive extends LinearOpMode {
         frontRight.setPower(fr * modifier);
         backLeft.setPower(bl * modifier);
         backRight.setPower(br * modifier);
+       
+    }
+
+//========================================================================================================
+//        vvvvvvvvvvvvvvvvvvvvvvvvvvv INITIALIZE vvvvvvvvvvvvvvvvvvvvvvvvvvv
+//========================================================================================================
         
     }
 
@@ -108,18 +163,25 @@ public class TeleOpDrive extends LinearOpMode {
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
+        flywheelMotor = hardwareMap.get(DcMotor.class, "flywheelMotor");
         //flywheelMotor = hardwareMap.get(DcMotor.class, "flywheelMotor");
 
 
 //--- CORRECTING MOTORS AND DRIVING STOP --- -------------------------------------------------------------------------
 
+
+
+//--- CORRECTING MOTORS AND DRIVING STOP --- ------------------------------------------------------------------------
         frontLeft.setDirection(DcMotor.Direction.REVERSE);// correcting motors that are spinning wrong direction
         backLeft.setDirection(DcMotor.Direction.REVERSE);
-
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);// if motors are zero, then stop moving
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        //boolean isToggled = false;
+        //boolean lastButtonState = false;
+        waitForStart();// when button start is pressed
 
 
 
@@ -139,6 +201,10 @@ public class TeleOpDrive extends LinearOpMode {
             double xl1 = Math.abs(gamepad1.left_stick_y) > 0.05 ? gamepad1.left_stick_y : 0;  // Strafe Left/Right
             double yr1 = Math.abs(gamepad1.right_stick_y) > 0.05 ? gamepad1.right_stick_y : 0;
 
+//--- TURBO AND TURTLE LOGIC --- -------------------------------------------------------------------------
+
+            //if (gamepad1.b && gamepad1.a) {
+                //driveInDirection(-xl1 / 2.0, yl1 / 2.0, yr1 / 2.0);
 
 //--- TURBO AND TURTLE LOGIC --- -------------------------------------------------------------------------
 
@@ -158,12 +224,12 @@ public class TeleOpDrive extends LinearOpMode {
                 //driveInDirection(-xl1 / 2.0, yl1 / 2.0, yr1 / 2.0);
             //}
 
+//--- INTAKE CONTROL LOGIC ---------------------------------------------------------------------------
 
 //--- INTAKE CONTROL LOGIC --- -------------------------------------------------------------------------
 
             double intakePower = gamepad1.right_trigger;
             double outtakePower = gamepad1.left_trigger;
-
 
             if (gamepad1.right_trigger_pressed) {
                 intakeMotor.setPower(1); //makes the motor suck items
@@ -176,6 +242,38 @@ public class TeleOpDrive extends LinearOpMode {
             }
 
 
+//--- Wheel smth LOGIC ----------------------------------------------------------------------------------
+            double wheelForward = gamepad2.right_trigger;
+            double wheelBackward = gamepad2.left_trigger;
+
+            if (gamepad2.right_trigger_pressed) {
+                flywheelMotor.setPower(1); //makes the wheel go forward
+            } else if (gamepad2.left_trigger_pressed) {
+                flywheelMotor.setPower(-1); //Makes the wheel go backwards
+            } else if (gamepad2.left_stick_button) {
+                flywheelMotor.setPower(1); //Makes the wheel go forward
+            } if {
+                flywheelMotor.setPower(0.0); //Stops the wheel if neither trigger is held
+            }
+
+//--- FLY WHEEL LOGIC --- -------------------------------------------------------------------------
+            boolean currentButtonState = gamepad2.left_bumper;
+            if (currentButtonState && !lastButtonState) {
+               isToggled = !isToggled;
+            }
+            lastButtonState = currentButtonState;
+
+             //Second Game Pad with flywheel on left_trigger
+            double flywheel_Power = gamepad2.left_trigger / 2.0;
+            if (flywheel_Power > 0.1) {
+                flywheelMotor.setPower(flywheel_Power);
+            } else if (isToggled) {
+                flywheelMotor.setPower(0.5);
+            } else {
+               flywheelMotor.setPower(0.0);
+            }
+
+//--- TELEMETRY DATA --- -------------------------------------------------------------------------
 //--- FLY WHEEL LOGIC --- -------------------------------------------------------------------------
 
             //Second Game Pad with flywheel on left_trigger
@@ -194,13 +292,32 @@ public class TeleOpDrive extends LinearOpMode {
             telemetry.addData("Joystick RX (Rotate)", yr1);
             telemetry.addData("Intake",intakePower );
             telemetry.addData("outtake", outtakePower );
+            telemetry.addData("flyWheel",flywheel_Power );
             //telemetry.addData("flyWheel",flywheel_Power );
             telemetry.addData("turbo",gamepad1.b );
             telemetry.addData("turtle",gamepad1.a );
             telemetry.addData("Front Left Power", frontLeft.getPower());
-            
+        
             telemetry.update();
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
