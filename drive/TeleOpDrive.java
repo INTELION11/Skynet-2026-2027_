@@ -248,12 +248,24 @@ public class TeleOpDrive extends LinearOpMode {
 
 
             if (gamepad2.right_trigger_pressed) {
+                flywheelMotor.setPower(.5); //makes the wheel go forward
+            } else if (gamepad2.right_trigger) {
+                flywheelMotor.setPower(.5); //makes the wheel go forward
+            } else if (gamepad2.left_trigger_pressed) {
+                flywheelMotor.setPower(-.5); //Makes the wheel go backwards
+            } else if (gamepad2.left_stick_button) {
+                flywheelMotor.setPower(0.5); //Makes the wheel go forward
+            }
+
+            if (wheelForward > .2) {
+                flywheelMotor.setPower(1); //makes the wheel go forward
+            } else if (wheelForward > .2) {
                 flywheelMotor.setPower(1); //makes the wheel go forward
             } else if (gamepad2.left_trigger_pressed) {
                 flywheelMotor.setPower(-1); //Makes the wheel go backwards
             } else if (gamepad2.left_stick_button) {
                 flywheelMotor.setPower(1); //Makes the wheel go forward
-            } if {
+            } else {
                 flywheelMotor.setPower(0.0); //Stops the wheel if neither trigger is held
             }
 
@@ -295,9 +307,7 @@ public class TeleOpDrive extends LinearOpMode {
             telemetry.addData("Joystick RX (Rotate)", yr1);
             telemetry.addData("Intake",intakePower );
             telemetry.addData("outtake", outtakePower );
-            telemetry.addData("flyWheel",flywheel_Power );
-            telemetry.addData("turbo",gamepad1.b );
-            telemetry.addData("turtle",gamepad1.a );
+            telemetry.addData("flyWheel",wheelForward );
             telemetry.addData("Front Left Power", frontLeft.getPower());
            
             telemetry.update();
