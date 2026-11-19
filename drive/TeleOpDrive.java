@@ -248,8 +248,18 @@ public class TeleOpDrive extends LinearOpMode {
 
 
             if (gamepad2.right_trigger_pressed) {
-                flywheelMotor.setPower(1); //makes the wheel go forward
+                flywheelMotor.setPower(.5); //makes the wheel go forward
             } else if (gamepad2.right_trigger) {
+                flywheelMotor.setPower(.5); //makes the wheel go forward
+            } else if (gamepad2.left_trigger_pressed) {
+                flywheelMotor.setPower(-.5); //Makes the wheel go backwards
+            } else if (gamepad2.left_stick_button) {
+                flywheelMotor.setPower(0.5); //Makes the wheel go forward
+            }
+
+            if (wheelForward > .2) {
+                flywheelMotor.setPower(1); //makes the wheel go forward
+            } else if (wheelForward > .2) {
                 flywheelMotor.setPower(1); //makes the wheel go forward
             } else if (gamepad2.left_trigger_pressed) {
                 flywheelMotor.setPower(-1); //Makes the wheel go backwards
